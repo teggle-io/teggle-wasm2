@@ -1,13 +1,12 @@
 //! Types and helpers for init and handle
 
 use serde::{Deserialize, Serialize};
-use std::convert::TryFrom;
 use std::fmt;
 
 use crate::addresses::HumanAddr;
 use crate::coins::Coin;
 use crate::encoding::Binary;
-use crate::errors::{StdError, StdResult};
+use crate::errors::{StdResult};
 use crate::types::Empty;
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
@@ -162,49 +161,6 @@ pub fn plaintext_log<K: ToString, V: ToString>(key: K, value: V) -> LogAttribute
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
-pub struct InitResponse<T = Empty>
-where
-    T: Clone + fmt::Debug + PartialEq,
-{
-    pub messages: Vec<CosmosMsg<T>>,
-    pub log: Vec<LogAttribute>,
-}
-
-pub type InitResult<U = Empty> = StdResult<InitResponse<U>>;
-
-impl<T> Default for InitResponse<T>
-where
-    T: Clone + fmt::Debug + PartialEq,
-{
-    fn default() -> Self {
-        InitResponse {
-            messages: vec![],
-            log: vec![],
-        }
-    }
-}
-
-impl<T> TryFrom<Context<T>> for InitResponse<T>
-where
-    T: Clone + fmt::Debug + PartialEq,
-{
-    type Error = StdError;
-
-    fn try_from(ctx: Context<T>) -> Result<Self, Self::Error> {
-        if ctx.data.is_some() {
-            Err(StdError::generic_err(
-                "cannot convert Context with data to InitResponse",
-            ))
-        } else {
-            Ok(InitResponse {
-                messages: ctx.messages,
-                log: ctx.log,
-            })
-        }
-    }
-}
-
-#[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
 pub struct HandleResponse<T = Empty>
 where
     T: Clone + fmt::Debug + PartialEq,
@@ -235,44 +191,6 @@ where
 {
     fn from(ctx: Context<T>) -> Self {
         HandleResponse {
-            messages: ctx.messages,
-            log: ctx.log,
-            data: ctx.data,
-        }
-    }
-}
-
-#[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
-pub struct MigrateResponse<T = Empty>
-where
-    T: Clone + fmt::Debug + PartialEq,
-{
-    pub messages: Vec<CosmosMsg<T>>,
-    pub log: Vec<LogAttribute>,
-    pub data: Option<Binary>,
-}
-
-pub type MigrateResult<U = Empty> = StdResult<MigrateResponse<U>>;
-
-impl<T> Default for MigrateResponse<T>
-where
-    T: Clone + fmt::Debug + PartialEq,
-{
-    fn default() -> Self {
-        MigrateResponse {
-            messages: vec![],
-            log: vec![],
-            data: None,
-        }
-    }
-}
-
-impl<T> From<Context<T>> for MigrateResponse<T>
-where
-    T: Clone + fmt::Debug + PartialEq,
-{
-    fn from(ctx: Context<T>) -> Self {
-        MigrateResponse {
             messages: ctx.messages,
             log: ctx.log,
             data: ctx.data,

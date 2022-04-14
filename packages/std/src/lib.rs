@@ -23,8 +23,7 @@ pub use crate::encoding::Binary;
 pub use crate::errors::{StdError, StdResult, SystemError, SystemResult};
 pub use crate::init_handle::{
     log, plaintext_log, BankMsg, Context, CosmosMsg, GovMsg, HandleResponse, HandleResult,
-    InitResponse, InitResult, LogAttribute, MigrateResponse, MigrateResult, StakingMsg, VoteOption,
-    WasmMsg,
+    LogAttribute,  StakingMsg, VoteOption,  WasmMsg,
 };
 #[cfg(feature = "iterator")]
 pub use crate::iterator::{Order, KV};
@@ -52,7 +51,7 @@ pub mod memory; // Used by exports and imports only. This assumes pointers are 3
 // TODO: REMOVE PUB MEMORY
 
 #[cfg(target_arch = "wasm32")]
-pub use crate::exports::{do_handle, do_init, do_migrate, do_query};
+pub use crate::exports::{do_handle, do_query};
 #[cfg(target_arch = "wasm32")]
 pub use crate::imports::{ExternalApi, ExternalQuerier, ExternalStorage};
 
