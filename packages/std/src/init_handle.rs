@@ -1,6 +1,5 @@
 //! Types and helpers for init and handle
 
-use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 use std::convert::TryFrom;
 use std::fmt;
@@ -11,12 +10,12 @@ use crate::encoding::Binary;
 use crate::errors::{StdError, StdResult};
 use crate::types::Empty;
 
-#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
 #[serde(rename_all = "snake_case")]
 // See https://github.com/serde-rs/serde/issues/1296 why we cannot add De-Serialize trait bounds to T
 pub enum CosmosMsg<T = Empty>
 where
-    T: Clone + fmt::Debug + PartialEq + JsonSchema,
+    T: Clone + fmt::Debug + PartialEq,
 {
     Bank(BankMsg),
     // by default we use RawMsg, but a contract can override that
@@ -27,7 +26,7 @@ where
     Gov(GovMsg),
 }
 
-#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
 #[serde(rename_all = "snake_case")]
 pub enum GovMsg {
     // Let contract vote on a governance proposal
@@ -37,7 +36,7 @@ pub enum GovMsg {
     },
 }
 
-#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
 // don't use rename_all here or you will break this
 pub enum VoteOption {
     Yes,
@@ -46,7 +45,7 @@ pub enum VoteOption {
     NoWithVeto,
 }
 
-#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
 #[serde(rename_all = "snake_case")]
 pub enum BankMsg {
     // this moves tokens in the underlying sdk
@@ -57,7 +56,7 @@ pub enum BankMsg {
     },
 }
 
-#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
 #[serde(rename_all = "snake_case")]
 pub enum StakingMsg {
     Delegate {
@@ -85,7 +84,7 @@ pub enum StakingMsg {
     },
 }
 
-#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
 #[serde(rename_all = "snake_case")]
 pub enum WasmMsg {
     /// this dispatches a call to another contract at a known address (with known ABI)
@@ -112,32 +111,32 @@ pub enum WasmMsg {
     },
 }
 
-impl<T: Clone + fmt::Debug + PartialEq + JsonSchema> From<GovMsg> for CosmosMsg<T> {
+impl<T: Clone + fmt::Debug + PartialEq> From<GovMsg> for CosmosMsg<T> {
     fn from(msg: GovMsg) -> Self {
         CosmosMsg::Gov(msg)
     }
 }
 
-impl<T: Clone + fmt::Debug + PartialEq + JsonSchema> From<BankMsg> for CosmosMsg<T> {
+impl<T: Clone + fmt::Debug + PartialEq> From<BankMsg> for CosmosMsg<T> {
     fn from(msg: BankMsg) -> Self {
         CosmosMsg::Bank(msg)
     }
 }
 
 #[cfg(feature = "staking")]
-impl<T: Clone + fmt::Debug + PartialEq + JsonSchema> From<StakingMsg> for CosmosMsg<T> {
+impl<T: Clone + fmt::Debug + PartialEq> From<StakingMsg> for CosmosMsg<T> {
     fn from(msg: StakingMsg) -> Self {
         CosmosMsg::Staking(msg)
     }
 }
 
-impl<T: Clone + fmt::Debug + PartialEq + JsonSchema> From<WasmMsg> for CosmosMsg<T> {
+impl<T: Clone + fmt::Debug + PartialEq> From<WasmMsg> for CosmosMsg<T> {
     fn from(msg: WasmMsg) -> Self {
         CosmosMsg::Wasm(msg)
     }
 }
 
-#[derive(Serialize, Deserialize, Clone, Default, Debug, PartialEq, JsonSchema)]
+#[derive(Serialize, Deserialize, Clone, Default, Debug, PartialEq)]
 pub struct LogAttribute {
     pub key: String,
     pub value: String,
@@ -162,10 +161,10 @@ pub fn plaintext_log<K: ToString, V: ToString>(key: K, value: V) -> LogAttribute
     }
 }
 
-#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
 pub struct InitResponse<T = Empty>
 where
-    T: Clone + fmt::Debug + PartialEq + JsonSchema,
+    T: Clone + fmt::Debug + PartialEq,
 {
     pub messages: Vec<CosmosMsg<T>>,
     pub log: Vec<LogAttribute>,
@@ -175,7 +174,7 @@ pub type InitResult<U = Empty> = StdResult<InitResponse<U>>;
 
 impl<T> Default for InitResponse<T>
 where
-    T: Clone + fmt::Debug + PartialEq + JsonSchema,
+    T: Clone + fmt::Debug + PartialEq,
 {
     fn default() -> Self {
         InitResponse {
@@ -187,7 +186,7 @@ where
 
 impl<T> TryFrom<Context<T>> for InitResponse<T>
 where
-    T: Clone + fmt::Debug + PartialEq + JsonSchema,
+    T: Clone + fmt::Debug + PartialEq,
 {
     type Error = StdError;
 
@@ -205,10 +204,10 @@ where
     }
 }
 
-#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
 pub struct HandleResponse<T = Empty>
 where
-    T: Clone + fmt::Debug + PartialEq + JsonSchema,
+    T: Clone + fmt::Debug + PartialEq,
 {
     pub messages: Vec<CosmosMsg<T>>,
     pub log: Vec<LogAttribute>,
@@ -219,7 +218,7 @@ pub type HandleResult<U = Empty> = StdResult<HandleResponse<U>>;
 
 impl<T> Default for HandleResponse<T>
 where
-    T: Clone + fmt::Debug + PartialEq + JsonSchema,
+    T: Clone + fmt::Debug + PartialEq,
 {
     fn default() -> Self {
         HandleResponse {
@@ -232,7 +231,7 @@ where
 
 impl<T> From<Context<T>> for HandleResponse<T>
 where
-    T: Clone + fmt::Debug + PartialEq + JsonSchema,
+    T: Clone + fmt::Debug + PartialEq,
 {
     fn from(ctx: Context<T>) -> Self {
         HandleResponse {
@@ -243,10 +242,10 @@ where
     }
 }
 
-#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
 pub struct MigrateResponse<T = Empty>
 where
-    T: Clone + fmt::Debug + PartialEq + JsonSchema,
+    T: Clone + fmt::Debug + PartialEq,
 {
     pub messages: Vec<CosmosMsg<T>>,
     pub log: Vec<LogAttribute>,
@@ -257,7 +256,7 @@ pub type MigrateResult<U = Empty> = StdResult<MigrateResponse<U>>;
 
 impl<T> Default for MigrateResponse<T>
 where
-    T: Clone + fmt::Debug + PartialEq + JsonSchema,
+    T: Clone + fmt::Debug + PartialEq,
 {
     fn default() -> Self {
         MigrateResponse {
@@ -270,7 +269,7 @@ where
 
 impl<T> From<Context<T>> for MigrateResponse<T>
 where
-    T: Clone + fmt::Debug + PartialEq + JsonSchema,
+    T: Clone + fmt::Debug + PartialEq,
 {
     fn from(ctx: Context<T>) -> Self {
         MigrateResponse {
@@ -284,7 +283,7 @@ where
 #[derive(Clone, Debug, PartialEq)]
 pub struct Context<T = Empty>
 where
-    T: Clone + fmt::Debug + PartialEq + JsonSchema,
+    T: Clone + fmt::Debug + PartialEq,
 {
     messages: Vec<CosmosMsg<T>>,
     log: Vec<LogAttribute>,
@@ -293,7 +292,7 @@ where
 
 impl<T> Default for Context<T>
 where
-    T: Clone + fmt::Debug + PartialEq + JsonSchema,
+    T: Clone + fmt::Debug + PartialEq,
 {
     fn default() -> Self {
         Context {
@@ -306,7 +305,7 @@ where
 
 impl<T> Context<T>
 where
-    T: Clone + fmt::Debug + PartialEq + JsonSchema,
+    T: Clone + fmt::Debug + PartialEq,
 {
     pub fn new() -> Self {
         Context::default()

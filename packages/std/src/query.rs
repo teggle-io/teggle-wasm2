@@ -1,4 +1,3 @@
-use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 use std::fmt;
 
@@ -12,7 +11,7 @@ pub type QueryResponse = Binary;
 
 pub type QueryResult = StdResult<QueryResponse>;
 
-#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
 #[serde(rename_all = "snake_case")]
 pub enum QueryRequest<T> {
     Bank(BankQuery),
@@ -24,7 +23,7 @@ pub enum QueryRequest<T> {
     Gov(GovQuery),
 }
 
-#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
 #[serde(rename_all = "snake_case")]
 pub enum BankQuery {
     /// This calls into the native bank module for one denomination
@@ -36,7 +35,7 @@ pub enum BankQuery {
     AllBalances { address: HumanAddr },
 }
 
-#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
 #[serde(rename_all = "snake_case")]
 pub enum GovQuery {
     /// Returns all the currently active proposals. Might be useful to filter out invalid votes, and trigger
@@ -44,7 +43,7 @@ pub enum GovQuery {
     Proposals {},
 }
 
-#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
 #[serde(rename_all = "snake_case")]
 pub enum DistQuery {
     /// This calls into the native bank module for all denominations.
@@ -53,7 +52,7 @@ pub enum DistQuery {
     Rewards { delegator: HumanAddr },
 }
 
-#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
 #[serde(rename_all = "snake_case")]
 pub enum MintQuery {
     /// This calls into the native bank module for all denominations.
@@ -63,7 +62,7 @@ pub enum MintQuery {
     BondedRatio {},
 }
 
-#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
 #[serde(rename_all = "snake_case")]
 pub enum WasmQuery {
     /// this queries the public API of another contract at a known address (with known ABI)
@@ -88,44 +87,44 @@ pub enum WasmQuery {
     },
 }
 
-impl<T: Clone + fmt::Debug + PartialEq + JsonSchema> From<GovQuery> for QueryRequest<T> {
+impl<T: Clone + fmt::Debug + PartialEq> From<GovQuery> for QueryRequest<T> {
     fn from(msg: GovQuery) -> Self {
         QueryRequest::Gov(msg)
     }
 }
 
-impl<T: Clone + fmt::Debug + PartialEq + JsonSchema> From<MintQuery> for QueryRequest<T> {
+impl<T: Clone + fmt::Debug + PartialEq> From<MintQuery> for QueryRequest<T> {
     fn from(msg: MintQuery) -> Self {
         QueryRequest::Mint(msg)
     }
 }
 
-impl<T: Clone + fmt::Debug + PartialEq + JsonSchema> From<DistQuery> for QueryRequest<T> {
+impl<T: Clone + fmt::Debug + PartialEq> From<DistQuery> for QueryRequest<T> {
     fn from(msg: DistQuery) -> Self {
         QueryRequest::Dist(msg)
     }
 }
 
-impl<T: Clone + fmt::Debug + PartialEq + JsonSchema> From<BankQuery> for QueryRequest<T> {
+impl<T: Clone + fmt::Debug + PartialEq> From<BankQuery> for QueryRequest<T> {
     fn from(msg: BankQuery) -> Self {
         QueryRequest::Bank(msg)
     }
 }
 
 #[cfg(feature = "staking")]
-impl<T: Clone + fmt::Debug + PartialEq + JsonSchema> From<StakingQuery> for QueryRequest<T> {
+impl<T: Clone + fmt::Debug + PartialEq> From<StakingQuery> for QueryRequest<T> {
     fn from(msg: StakingQuery) -> Self {
         QueryRequest::Staking(msg)
     }
 }
 
-impl<T: Clone + fmt::Debug + PartialEq + JsonSchema> From<WasmQuery> for QueryRequest<T> {
+impl<T: Clone + fmt::Debug + PartialEq> From<WasmQuery> for QueryRequest<T> {
     fn from(msg: WasmQuery) -> Self {
         QueryRequest::Wasm(msg)
     }
 }
 
-#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
 #[serde(rename_all = "snake_case")]
 pub struct BalanceResponse {
     /// Always returns a Coin with the requested denom.
@@ -133,14 +132,14 @@ pub struct BalanceResponse {
     pub amount: Coin,
 }
 
-#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
 #[serde(rename_all = "snake_case")]
 pub struct AllBalanceResponse {
     /// Returns all non-zero coins held by this account.
     pub amount: Vec<Coin>,
 }
 
-#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
 #[serde(rename_all = "snake_case")]
 pub enum StakingQuery {
     /// Returns the denomination that can be bonded (if there are multiple native tokens on the chain)
@@ -160,14 +159,14 @@ pub enum StakingQuery {
 }
 
 /// ProposalsResponse is data format returned from GovQuery::Proposals query
-#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
 #[serde(rename_all = "snake_case")]
 pub struct ProposalsResponse {
     pub proposals: Vec<Proposal>,
 }
 
 /// ProposalsResponse is data format returned from GovQuery::Proposals query
-#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
 #[serde(rename_all = "snake_case")]
 pub struct Proposal {
     pub id: u64,
@@ -178,28 +177,28 @@ pub struct Proposal {
 }
 
 /// BondedDenomResponse is data format returned from StakingRequest::BondedDenom query
-#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
 #[serde(rename_all = "snake_case")]
 pub struct BondedDenomResponse {
     pub denom: String,
 }
 
 /// UnbondingDelegationsResponse is data format returned from StakingRequest::UnbondingDelegations query
-#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
 #[serde(rename_all = "snake_case")]
 pub struct UnbondingDelegationsResponse {
     pub delegations: Vec<Delegation>,
 }
 
 /// DelegationsResponse is data format returned from StakingRequest::AllDelegations query
-#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
 #[serde(rename_all = "snake_case")]
 pub struct AllDelegationsResponse {
     pub delegations: Vec<Delegation>,
 }
 
 /// Delegation is basic (cheap to query) data about a delegation
-#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
 pub struct Delegation {
     pub delegator: HumanAddr,
     pub validator: HumanAddr,
@@ -218,7 +217,7 @@ impl From<FullDelegation> for Delegation {
 }
 
 /// DelegationResponse is data format returned from StakingRequest::Delegation query
-#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
 #[serde(rename_all = "snake_case")]
 pub struct DelegationResponse {
     pub delegation: Option<FullDelegation>,
@@ -226,7 +225,7 @@ pub struct DelegationResponse {
 
 /// FullDelegation is all the info on the delegation, some (like accumulated_reward and can_redelegate)
 /// is expensive to query
-#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
 pub struct FullDelegation {
     pub delegator: HumanAddr,
     pub validator: HumanAddr,
@@ -241,12 +240,12 @@ pub struct FullDelegation {
 }
 
 /// ValidatorsResponse is data format returned from StakingRequest::Validators query
-#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
 pub struct ValidatorsResponse {
     pub validators: Vec<Validator>,
 }
 
-#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
 pub struct Validator {
     pub address: HumanAddr,
     pub commission: Decimal,
@@ -256,32 +255,32 @@ pub struct Validator {
 }
 
 /// Rewards response
-#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
 pub struct RewardsResponse {
     pub rewards: Vec<ValidatorRewards>,
     pub total: Vec<Coin>,
 }
 
-#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
 pub struct ValidatorRewards {
     pub validator_address: HumanAddr,
     pub reward: Vec<Coin>,
 }
 
-#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
 pub struct RewardCoin {
     pub coin: String,
     pub demon: String,
 }
 
 /// Inflation response
-#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
 pub struct InflationResponse {
     pub inflation_rate: String,
 }
 
 /// Bonded Ratio response
-#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
 pub struct BondedRatioResponse {
     pub bonded_ratio: String,
 }

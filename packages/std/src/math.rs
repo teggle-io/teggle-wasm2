@@ -1,4 +1,3 @@
-use schemars::JsonSchema;
 use serde::{de, ser, Deserialize, Deserializer, Serialize};
 use std::convert::{TryFrom, TryInto};
 use std::fmt::{self, Write};
@@ -10,8 +9,8 @@ use crate::errors::{StdError, StdResult};
 /// A fixed-point decimal value with 18 fractional digits, i.e. Decimal(1_000_000_000_000_000_000) == 1.0
 ///
 /// The greatest possible value that can be represented is 340282366920938463463.374607431768211455 (which is (2^128 - 1) / 10^18)
-#[derive(Copy, Clone, Default, Debug, PartialEq, Eq, PartialOrd, Ord, JsonSchema)]
-pub struct Decimal(#[schemars(with = "String")] u128);
+#[derive(Copy, Clone, Default, Debug, PartialEq, Eq, PartialOrd, Ord)]
+pub struct Decimal(u128);
 
 const DECIMAL_FRACTIONAL: u128 = 1_000_000_000_000_000_000;
 
@@ -169,8 +168,8 @@ impl<'de> de::Visitor<'de> for DecimalVisitor {
 }
 
 //*** Uint128 ***/
-#[derive(Copy, Clone, Default, Debug, PartialEq, Eq, PartialOrd, Ord, JsonSchema)]
-pub struct Uint128(#[schemars(with = "String")] pub u128);
+#[derive(Copy, Clone, Default, Debug, PartialEq, Eq, PartialOrd, Ord)]
+pub struct Uint128(pub u128);
 
 impl Uint128 {
     /// Creates a Uint128(0)

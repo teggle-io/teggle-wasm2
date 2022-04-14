@@ -1,4 +1,3 @@
-use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 use snafu::Snafu;
 
@@ -20,7 +19,7 @@ use snafu::Snafu;
 /// - Add serialize/deserialize test
 /// - Add creator function in std_error_helpers.rs
 /// - Regenerate schemas
-#[derive(Debug, Serialize, Deserialize, Snafu, JsonSchema)]
+#[derive(Debug, Serialize, Deserialize, Snafu)]
 #[serde(rename_all = "snake_case")]
 #[non_exhaustive]
 pub enum StdError {

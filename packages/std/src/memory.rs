@@ -15,6 +15,10 @@ pub struct Region {
     pub length: u32,
 }
 
+//extern "C" {
+//    fn tuplet_log(a: i32, b: i32, c: i32);
+//}
+
 /// Creates a memory region of capacity `size` and length 0. Returns a pointer to the Region.
 /// This is the same as the `allocate` export, but designed to be called internally.
 pub fn alloc(size: usize) -> *mut Region {

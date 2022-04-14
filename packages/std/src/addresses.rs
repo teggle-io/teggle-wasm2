@@ -1,11 +1,10 @@
-use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 use std::fmt;
 
 use crate::encoding::Binary;
 
 // Added Eq and Hash to allow this to be a key in a HashMap (MockQuerier)
-#[derive(Serialize, Deserialize, Clone, Default, Debug, PartialEq, Eq, JsonSchema, Hash)]
+#[derive(Serialize, Deserialize, Clone, Default, Debug, PartialEq, Eq, Hash)]
 pub struct HumanAddr(pub String);
 
 impl HumanAddr {
@@ -52,7 +51,7 @@ impl From<String> for HumanAddr {
     }
 }
 
-#[derive(Serialize, Deserialize, Clone, Default, Debug, PartialEq, JsonSchema)]
+#[derive(Serialize, Deserialize, Clone, Default, Debug, PartialEq)]
 pub struct CanonicalAddr(pub Binary);
 
 impl From<&[u8]> for CanonicalAddr {

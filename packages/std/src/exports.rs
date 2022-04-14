@@ -1,14 +1,13 @@
 //! exports exposes the public wasm API
 //!
 //! cosmwasm_vm_version_3, allocate and deallocate turn into Wasm exports
-//! as soon as cosmwasm_std is `use`d in the contract, even privately.
+//! as soon as wasm2_std is `use`d in the contract, even privately.
 //!
 //! do_init and do_wrapper should be wrapped with a extern "C" entry point
 //! including the contract-specific init/handle function pointer.
 use std::fmt;
 use std::vec::Vec;
 
-use schemars::JsonSchema;
 use serde::{de::DeserializeOwned, Serialize};
 
 use crate::errors::StdResult;
@@ -55,8 +54,8 @@ pub fn do_init<T, U>(
     msg_ptr: u32,
 ) -> u32
 where
-    T: DeserializeOwned + JsonSchema,
-    U: Serialize + Clone + fmt::Debug + PartialEq + JsonSchema,
+    T: DeserializeOwned,
+    U: Serialize + Clone + fmt::Debug + PartialEq,
 {
     let res: InitResult<U> = _do_init(init_fn, env_ptr as *mut Region, msg_ptr as *mut Region);
     let v = to_vec(&res).unwrap();
@@ -74,8 +73,8 @@ pub fn do_handle<T, U>(
     msg_ptr: u32,
 ) -> u32
 where
-    T: DeserializeOwned + JsonSchema,
-    U: Serialize + Clone + fmt::Debug + PartialEq + JsonSchema,
+    T: DeserializeOwned,
+    U: Serialize + Clone + fmt::Debug + PartialEq,
 {
     let res: HandleResult<U> =
         _do_handle(handle_fn, env_ptr as *mut Region, msg_ptr as *mut Region);
@@ -84,7 +83,7 @@ where
 }
 
 /// do_query should be wrapped in an external "C" export, containing a contract-specific function as arg
-pub fn do_query<T: DeserializeOwned + JsonSchema>(
+pub fn do_query<T: DeserializeOwned>(
     query_fn: &dyn Fn(
         &Extern<ExternalStorage, ExternalApi, ExternalQuerier>,
         T,
@@ -107,8 +106,8 @@ pub fn do_migrate<T, U>(
     msg_ptr: u32,
 ) -> u32
 where
-    T: DeserializeOwned + JsonSchema,
-    U: Serialize + Clone + fmt::Debug + PartialEq + JsonSchema,
+    T: DeserializeOwned,
+    U: Serialize + Clone + fmt::Debug + PartialEq,
 {
     let res: MigrateResult<U> =
         _do_migrate(migrate_fn, env_ptr as *mut Region, msg_ptr as *mut Region);
@@ -126,8 +125,8 @@ fn _do_init<T, U>(
     msg_ptr: *mut Region,
 ) -> InitResult<U>
 where
-    T: DeserializeOwned + JsonSchema,
-    U: Serialize + Clone + fmt::Debug + PartialEq + JsonSchema,
+    T: DeserializeOwned,
+    U: Serialize + Clone + fmt::Debug + PartialEq,
 {
     let env: Vec<u8> = unsafe { consume_region(env_ptr) };
     let msg: Vec<u8> = unsafe { consume_region(msg_ptr) };
@@ -147,8 +146,8 @@ fn _do_handle<T, U>(
     msg_ptr: *mut Region,
 ) -> HandleResult<U>
 where
-    T: DeserializeOwned + JsonSchema,
-    U: Serialize + Clone + fmt::Debug + PartialEq + JsonSchema,
+    T: DeserializeOwned,
+    U: Serialize + Clone + fmt::Debug + PartialEq,
 {
     let env: Vec<u8> = unsafe { consume_region(env_ptr) };
     let msg: Vec<u8> = unsafe { consume_region(msg_ptr) };
@@ -159,7 +158,7 @@ where
     handle_fn(&mut deps, env, msg)
 }
 
-fn _do_query<T: DeserializeOwned + JsonSchema>(
+fn _do_query<T: DeserializeOwned>(
     query_fn: &dyn Fn(
         &Extern<ExternalStorage, ExternalApi, ExternalQuerier>,
         T,
@@ -183,8 +182,8 @@ fn _do_migrate<T, U>(
     msg_ptr: *mut Region,
 ) -> MigrateResult<U>
 where
-    T: DeserializeOwned + JsonSchema,
-    U: Serialize + Clone + fmt::Debug + PartialEq + JsonSchema,
+    T: DeserializeOwned,
+    U: Serialize + Clone + fmt::Debug + PartialEq,
 {
     let env: Vec<u8> = unsafe { consume_region(env_ptr) };
     let msg: Vec<u8> = unsafe { consume_region(msg_ptr) };

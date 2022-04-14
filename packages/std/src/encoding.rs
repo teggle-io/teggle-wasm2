@@ -1,29 +1,30 @@
 use std::fmt;
 
-use schemars::JsonSchema;
 use serde::{de, ser, Deserialize, Deserializer, Serialize};
 
-use crate::errors::{StdError, StdResult};
+use crate::errors::{StdResult};
 
 /// Binary is a wrapper around Vec<u8> to add base64 de/serialization
 /// with serde. It also adds some helper methods to help encode inline.
 ///
 /// This is only needed as serde-json-{core,wasm} has a horrible encoding for Vec<u8>
-#[derive(Clone, Default, Debug, PartialEq, JsonSchema)]
-pub struct Binary(#[schemars(with = "String")] pub Vec<u8>);
+#[derive(Clone, Default, Debug, PartialEq)]
+pub struct Binary(pub Vec<u8>);
 
 impl Binary {
     /// take an (untrusted) string and decode it into bytes.
     /// fails if it is not valid base64
-    pub fn from_base64(encoded: &str) -> StdResult<Self> {
-        let binary = base64::decode(&encoded).map_err(StdError::invalid_base64)?;
-        Ok(Binary(binary))
+    pub fn from_base64(_encoded: &str) -> StdResult<Self> {
+        unimplemented!("from_base64: needs host base64");
+        //let binary = base64::decode(&encoded).map_err(StdError::invalid_base64)?;
+        //Ok(Binary(binary))
     }
 
     /// encode to base64 string (guaranteed to be success as we control the data inside).
     /// this returns normalized form (with trailing = if needed)
     pub fn to_base64(&self) -> String {
-        base64::encode(&self.0)
+        unimplemented!("from_base64to_base64: needs host base64");
+        //base64::encode(&self.0)
     }
     pub fn as_slice(&self) -> &[u8] {
         self.0.as_slice()
