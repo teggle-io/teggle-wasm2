@@ -1,13 +1,13 @@
-# wasm2-std
+# wasm2-host
 
 NOTE: This is a fork of the secret-cosmwasm-std package in use by [Teggle](https://teggle.com).
 
-The standard library for building WASM2 smart contracts. Code in this package
-is compiled into the smart contract.
+This library is to be included on the host running WASM2 smart contracts.
 
 ## License
 
-This package is part of the cosmwasm repository, licensed under the Apache
+This package is part of the wasm2 repository, licensed under the Apache
 License 2.0 (see
 [NOTICE](https://github.com/CosmWasm/cosmwasm/blob/master/NOTICE) and
 [LICENSE](https://github.com/CosmWasm/cosmwasm/blob/master/LICENSE)).
+

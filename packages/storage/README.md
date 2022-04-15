@@ -1,9 +1,9 @@
-# cosmwasm-storage
+# wasm2-storage
 
-NOTE: This is a fork of the cosmwasm-storage package in use by [SecretNetwork](https://scrt.network).
+NOTE: This is a fork of the secret-cosmwasm-storage package in use by [Teggle](https://teggle.com).
 
-CosmWasm library with useful helpers for Storage patterns. You can use `Storage`
-implementations in `cosmwasm-std`, or rely on these to remove some common
+WASM2 library with useful helpers for Storage patterns. You can use `Storage`
+implementations in `wasm2-std`, or rely on these to remove some common
 boilterplate.
 
 ## Contents
