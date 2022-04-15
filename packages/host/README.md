@@ -1,8 +1,7 @@
 # wasm2-host
 
-NOTE: This is a fork of the secret-cosmwasm-std package in use by [Teggle](https://teggle.com).
-
-This library is to be included on the host running WASM2 smart contracts.
+This library is to be included on the host running WASM2 smart contracts
+and intended for use by [Teggle](https://teggle.com).
 
 ## License
 
