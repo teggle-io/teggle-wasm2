@@ -67,7 +67,8 @@ impl<'d, S: Storage, A: Api, Q: Querier> Engine<'d, S, A, Q> {
                 ],
                 &mut self.instance,
             )
-            .map_err(wasmi_error_to_wasm2_error)?
+            .map_err(wasmi_error_to_wasm2_error(
+                "error calling 'handle' in guest".to_string()))?
         {
             Some(RuntimeValue::I32(offset)) => Ok(offset as u32),
             other => {
@@ -87,7 +88,8 @@ impl<'d, S: Storage, A: Api, Q: Querier> Engine<'d, S, A, Q> {
                 &[RuntimeValue::I32(msg_ptr as i32)],
                 &mut self.instance,
             )
-            .map_err(wasmi_error_to_wasm2_error)?
+            .map_err(wasmi_error_to_wasm2_error(
+                "error calling 'query' in guest".to_string()))?
         {
             Some(RuntimeValue::I32(offset)) => Ok(offset as u32),
             other => {
