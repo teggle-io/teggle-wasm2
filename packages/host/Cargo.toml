@@ -22,4 +22,4 @@ snafu = { version = "0.6.6" }
 derive_more = "0.99"
 libflate = "1"
 cosmwasm-std = { version = "0.10", package = "secret-cosmwasm-std" }
-wasmi = { version = "0", default-features = false, path = "../../../wasmi" }
+wasmi = { version = "0", default-features = false, features = [], path = "../../../wasmi" }
