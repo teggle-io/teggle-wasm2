@@ -459,6 +459,7 @@ impl<'d, S: Storage, A: Api, Q: Querier> Wasm2Api for Wasm2Instance<'d, S, A, Q>
 
         // TODO: customise the version e.t.c.
         debug_print!("WASM2[cortex.v1]: {:?}", message);
+        //println!("WASM2[cortex.v1]: {:?}", message);
 
         Ok(None)
     }
